@@ -1,3 +1,4 @@
+// Module created by ISellSoup on GitHub
 export default class {
     #throttleCount = 0;
     #debounceCount = 0;
