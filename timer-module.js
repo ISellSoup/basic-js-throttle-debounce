@@ -1,4 +1,4 @@
-class Timer {
+export default class {
     #throttleCount = 0;
     #debounceCount = 0;
     #debounceGen = 0;
