@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <label>Throttle (ms) <input type="number" value="1000" id="throttle"></label>
+        <label>Throttle (ms) <input type="number" value="500" id="throttle"></label>
         <br>
-        <label>Throttle limit <input type="number" value="1" id="throttleLimit"></label>
+        <label>Throttle limit <input type="number" value="2" id="throttleLimit"></label>
         <br>
         <label>Debounce (ms) <input type="number" value="100" id="debounce"></label>
         <p>My value: <span id="value">0</span></p>
@@ -12,29 +12,22 @@
         <script type="module">
             import Timer from "/timer-module.js";
             
-            const throttleTimer = new Timer();
-            const debounceTimer = new Timer();
+            const buttonTimer = new Timer();
             const incrementButton = document.getElementById("incrementButton");
             const valueElement = document.getElementById("value");
 
             incrementButton.addEventListener("click",() => {
-                throttleTimer.throttle = document.getElementById("throttle").value;
-                throttleTimer.throttleLimit = document.getElementById("throttleLimit").value;
-                debounceTimer.throttle = throttleTimer.throttle;
-                debounceTimer.throttleLimit = throttleTimer.throttleLimit;
-                debounceTimer.debounce = document.getElementById("debounce").value;
+                buttonTimer.throttle = document.getElementById("throttle").value;
+                buttonTimer.throttleLimit = document.getElementById("throttleLimit").value;
+                buttonTimer.debounce = document.getElementById("debounce").value;
 
-                throttleTimer.call(() => {
+                buttonTimer.call(() => {
+                    incrementButton.style.color = "black";
+                    incrementButton.style.backgroundColor = "white";
+                },() => {
                     valueElement.innerText = parseInt(valueElement.innerText) + 1;
                     incrementButton.style.color = "white";
                     incrementButton.style.backgroundColor = "black";
-                });
-
-                
-
-                debounceTimer.call(() => {
-                    incrementButton.style.color = "black";
-                    incrementButton.style.backgroundColor = "white";
                 });
             });
         </script>

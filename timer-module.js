@@ -1,39 +1,38 @@
 // Module created by ISellSoup on GitHub
 export default class {
-    #throttleCount = 0;
     #debounceCount = 0;
-    #debounceGen = 0;
 
     constructor({ throttle = 0, throttleLimit = 1, debounce = 0 } = {}) {
         this.throttle = throttle;
         this.throttleLimit = throttleLimit;
         this.debounce = debounce;
+        this.throttleCount = 0;
     }
 
-    call(callback) {
-        if (!this.throttle || this.#throttleCount < this.throttleLimit) {
+    call(callback = ()=>{},beforeDebounce = ()=>{}) {
+        if (!this.throttle || this.throttleCount < this.throttleLimit) {
             if (this.throttle) {
-                if (this.#throttleCount === 0) {
-                    setTimeout(() => { this.#throttleCount = 0; }, this.throttle);
+                if (this.throttleCount === 0) {
+                    setTimeout(() => { this.throttleCount = 0; }, this.throttle);
                 }
-                this.#throttleCount++;
+                this.throttleCount++;
             }
 
             if (this.debounce) {
-                this.#debounceCount++;
+                if (this.#debounceCount >= Number.MAX_SAFE_INTEGER) this.#debounceCount = Number.MIN_SAFE_INTEGER;
+                else this.#debounceCount++;
+
                 const targetCount = this.#debounceCount;
-                const targetGen = this.#debounceGen;
 
                 setTimeout(()=>{
-                    if (this.#debounceCount === targetCount && this.#debounceGen === targetGen) {
+                    if (this.#debounceCount === targetCount) {
                         this.#debounceCount = 0;
-                        this.#debounceGen++;
                         callback();
                     }
                 },this.debounce);
-                return true;
-            }
-            callback();
+            } else callback();
+
+            if (beforeDebounce) beforeDebounce();
             return true;
         } else {
             return false;
