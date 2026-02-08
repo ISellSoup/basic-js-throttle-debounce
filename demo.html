@@ -21,7 +21,7 @@
                 buttonTimer.throttleLimit = document.getElementById("throttleLimit").value;
                 buttonTimer.debounce = document.getElementById("debounce").value;
 
-                buttonTimer.call(() => {
+                buttonTimer.do(() => {
                     incrementButton.style.color = "black";
                     incrementButton.style.backgroundColor = "white";
                 },() => {
