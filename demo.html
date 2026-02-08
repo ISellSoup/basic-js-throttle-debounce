@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <style>
+            h2 {
+                color: black;
+                background-color: transparent;
+                display: inline;
+            }
+        </style>
+    </head>
     <body>
         <label>Throttle (ms) <input type="number" value="500" id="throttle"></label>
         <br>
@@ -7,29 +16,75 @@
         <br>
         <label>Debounce (ms) <input type="number" value="100" id="debounce"></label>
         <p>My value: <span id="value">0</span></p>
-        <button id="incrementButton" style="color: black; background-color: white">Increment</button>
+
+        <h2 id="basicDemo">Basic demo:</h2><br>
+        <button id="doButton">Increment (do)</button><br>
+        <button id="forceButton">Increment (force)</button><br>
+        <br>
+        <h2 id="scheduleDemo">Schedule demo:</h2><br>
+        <button id="scheduleButton">Increment (schedule)</button><br>
+        <button id="forceScheduledButton">Force scheduled x1</button>
 
         <script type="module">
-            import Timer from "/timer-module.js";
+            import { CallTimer } from "/timer-module.js";
             
-            const buttonTimer = new Timer();
-            const incrementButton = document.getElementById("incrementButton");
             const valueElement = document.getElementById("value");
 
-            incrementButton.addEventListener("click",() => {
-                buttonTimer.throttle = document.getElementById("throttle").value;
-                buttonTimer.throttleLimit = document.getElementById("throttleLimit").value;
-                buttonTimer.debounce = document.getElementById("debounce").value;
+            const basicDemoTimer = new CallTimer();
+            const scheduleDemoTimer = new CallTimer();
 
-                buttonTimer.do(() => {
-                    incrementButton.style.color = "black";
-                    incrementButton.style.backgroundColor = "white";
-                },() => {
-                    valueElement.innerText = parseInt(valueElement.innerText) + 1;
-                    incrementButton.style.color = "white";
-                    incrementButton.style.backgroundColor = "black";
-                });
+            const throttleInput = document.getElementById("throttle");
+            const throttleLimitInput = document.getElementById("throttleLimit");
+            const debounceInput = document.getElementById("debounce");
+
+            throttleInput.addEventListener("change",update);
+            throttleLimitInput.addEventListener("change",update);
+            debounceInput.addEventListener("change",update);
+
+            function update() {                
+                basicDemoTimer.throttle = throttleInput.value;
+                basicDemoTimer.throttleLimit = throttleLimitInput.value;
+                basicDemoTimer.debounce = debounceInput.value;
+
+                scheduleDemoTimer.throttle = throttleInput.value;
+                scheduleDemoTimer.throttleLimit = throttleLimitInput.value;
+                scheduleDemoTimer.debounce = debounceInput.value;
+            }
+            
+            const basicDemoCallbacks = getCallbacks(document.getElementById("basicDemo"));
+            const scheduleDemoCallbacks = getCallbacks(document.getElementById("scheduleDemo"));
+
+            function getCallbacks(headerElement) {
+                return {
+                    beforeDebounce: () => {
+                        valueElement.innerText = parseInt(valueElement.innerText) + 1;
+                        headerElement.style.color = "white";
+                        headerElement.style.backgroundColor = "blue";
+                    },
+                    debounce: () => {
+                        headerElement.style.color = "black";
+                        headerElement.style.backgroundColor = "transparent";
+                    }
+                };
+            }
+
+            document.getElementById("doButton").addEventListener("click",() => {
+                basicDemoTimer.do(basicDemoCallbacks.beforeDebounce, basicDemoCallbacks.debounce);
             });
+
+            document.getElementById("forceButton").addEventListener("click",() => {
+                basicDemoTimer.force(basicDemoCallbacks.beforeDebounce, basicDemoCallbacks.debounce);
+            });
+
+            document.getElementById("scheduleButton").addEventListener("click",() => {
+                scheduleDemoTimer.schedule(false, scheduleDemoCallbacks.beforeDebounce, scheduleDemoCallbacks.debounce);
+            });
+            
+            document.getElementById("forceScheduledButton").addEventListener("click",() => {
+                scheduleDemoTimer.forceScheduled(1);
+            });
+
+            update()
         </script>
     </body>
 </html>
