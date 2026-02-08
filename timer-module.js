@@ -9,7 +9,7 @@ export default class {
         this.throttleCount = 0;
     }
 
-    call(callback = ()=>{},beforeDebounce = ()=>{}) {
+    do(callback = ()=>{},beforeDebounce = ()=>{}) {
         if (!this.throttle || this.throttleCount < this.throttleLimit) {
             if (this.throttle) {
                 if (this.throttleCount === 0) {
