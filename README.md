@@ -1,5 +1,5 @@
 # Basic js throttle/debounce module
-This module exports a class constructor (I like to call it the "Timer" class) that takes in a table of options.
+This module exports a `Timer` class. It's constructor includes in a table of options.
 ```
 {
   throttle = 0,

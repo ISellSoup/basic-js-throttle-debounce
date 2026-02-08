@@ -1,5 +1,5 @@
 // Module created by ISellSoup on GitHub
-export default class {
+export default class Timer {
     #debounceCount = 0;
 
     constructor({ throttle = 0, throttleLimit = 1, debounce = 0 } = {}) {
