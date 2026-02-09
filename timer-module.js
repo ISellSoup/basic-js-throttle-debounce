@@ -78,7 +78,7 @@ export class CallTimer {
     }
 
     doScheduled(max = Infinity) {
-        this.forceScheduled(Math.min(this.#throttleLimit - this.#throttleCount, max ?? Infinity))
+        this.forceScheduled(Math.min(this.#throttleLimit - this.#throttleCount, max ?? Infinity));
     }
 
     forceScheduled(count = Infinity) {
