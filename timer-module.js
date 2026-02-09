@@ -14,12 +14,12 @@ export class CallTimer {
 
     set throttleCount(value) {
         this.#throttleCount = Math.max(value,0) || 0;
-        this.forceScheduled(this.#throttleLimit - this.#throttleCount);
+        this.doScheduled();
     }
 
     set throttleLimit(value) {
         this.#throttleLimit = Math.max(value,0) || 1;
-        this.forceScheduled(this.#throttleLimit - this.#throttleCount);
+        this.doScheduled();
     }
 
     get throttleCount() {
@@ -75,6 +75,10 @@ export class CallTimer {
             else this.queue.push(object);
         
         } else this.do(beforeDebounce, debounce);
+    }
+
+    doScheduled(max = Infinity) {
+        this.forceScheduled(Math.min(this.#throttleLimit - this.#throttleCount, max ?? Infinity))
     }
 
     forceScheduled(count = Infinity) {
